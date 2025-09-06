@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-import routes from "./routes/index.js";  // add .js extension in ESM
+import routes from "./routes/index.js";  
 
 dotenv.config();
 connectDB();
