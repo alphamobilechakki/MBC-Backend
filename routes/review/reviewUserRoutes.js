@@ -2,8 +2,8 @@ import express from 'express';
 import {
   createReview,
   getReviewsByProduct,
-} from '../controllers/review/reviewController.js';
-import authToken from '../middleware/authToken.js';
+} from '../../controllers/review/reviewUserController.js';
+import authToken from '../../middleware/authToken.js';
 
 const router = express.Router();
 

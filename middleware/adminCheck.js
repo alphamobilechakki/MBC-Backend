@@ -1,10 +1,6 @@
-import Admin from '../models/adminModel.js';
-
 const adminCheck = async (req, res, next) => {
   try {
-    const admin = await Admin.findById(req.user.id);
-
-    if (admin.role !== 'admin') {
+    if (req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Admin resource. Access denied.' });
     }
 

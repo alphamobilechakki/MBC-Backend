@@ -1,9 +1,7 @@
 async function userLogout(req,res){
     try{
-        res.clearCookie("token")
-
         res.json({
-            message : "Logged out successfully",
+            message : "Logged out successfully. Please delete the token from the client.",
             error : false,
             success : true,
             data : []

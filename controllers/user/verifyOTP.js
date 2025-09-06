@@ -6,8 +6,8 @@ async function verifyOTP(req, res) {
   try {
     const { mobile, otp, name, address } = req.body;
 
-    msg91.initialize({authKey: "YOUR_AUTH_KEY"});
-    let otp_instance = msg91.getOTP("YOUR_TEMPLATE_ID");
+    msg91.initialize({authKey: process.env.MSG91_AUTH_KEY});
+    let otp_instance = msg91.getOTP(process.env.MSG91_TEMPLATE_ID);
 
     const isOTPVerified = await otp_instance.verify(mobile, otp);
 

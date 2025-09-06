@@ -1,14 +1,17 @@
 import userLoginController from "../controllers/user/userLogin.js";
 import authToken from "../middleware/authToken.js";
-import productRoutes from "./productRoutes.js";
-import reviewRoutes from "./reviewRoutes.js";
-import orderRoutes from "./orderRoutes.js";
-import adminRoutes from "./adminRoutes.js";
-import userProfileRoutes from "./userProfileRoutes.js";
 import userSignUpController from "../controllers/user/userSignUp.js";
 import express from "express";
 import { sendOTP } from "../controllers/user/otpController.js";
 import verifyOTP from "../controllers/user/verifyOTP.js";
+import productUserRoutes from "./product/productUserRoutes.js";
+import productAdminRoutes from "./product/productAdminRoutes.js";
+import reviewUserRoutes from "./review/reviewUserRoutes.js";
+import orderUserRoutes from "./order/orderUserRoutes.js";
+import orderAdminRoutes from "./order/orderAdminRoutes.js";
+import userProfileRoutes from "./user/userProfileRoutes.js";
+import adminAuthRoutes from "./admin/adminAuthRoutes.js";
+import driverRoutes from "./admin/driverRoutes.js";
 
 const router = express.Router();
 
@@ -21,19 +24,22 @@ router.post("/sendOTP", sendOTP);
 router.post("/verifyOTP", verifyOTP);
 
 //Product routes
-router.use("/", productRoutes);
+router.use("/", productUserRoutes);
+router.use("/admin", productAdminRoutes);
 
 //Review routes
-router.use("/", reviewRoutes);
+router.use("/", reviewUserRoutes);
 
 //Order routes
-router.use("/", orderRoutes);
+router.use("/", orderUserRoutes);
+router.use("/admin", orderAdminRoutes);
 
 //Admin routes
-router.use("/", adminRoutes);
+router.use("/admin", adminAuthRoutes);
+router.use("/admin", driverRoutes);
 
 //User profile routes
-router.use("/", userProfileRoutes);
+router.use("/user", userProfileRoutes);
 
 export default router;
 

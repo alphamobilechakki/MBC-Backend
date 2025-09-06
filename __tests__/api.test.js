@@ -44,13 +44,13 @@ describe('User Authentication', () => {
       });
     expect(res.statusCode).toEqual(201);
     expect(res.body.success).toBe(true);
-    expect(res.body.data).toBeDefined();
+    expect(res.body.message).toEqual('OTP sent successfully!');
   });
 
   it('should send an OTP to a mobile number', async () => {
     const res = await request(app)
-      .post('/api/verifyMobile')
-      .send({ mobileNumber: '1234567890' });
+      .post('/api/sendOTP')
+      .send({ mobile: '1234567890' });
     expect(res.statusCode).toEqual(200);
   });
 
@@ -59,10 +59,10 @@ describe('User Authentication', () => {
     await Otp.create({ mobile: '1234567890', otp, expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
     const res = await request(app)
       .post('/api/verifyOTP')
-      .send({ mobileNumber: '1234567890', otp });
-    expect(res.statusCode).toEqual(200);
+      .send({ mobile: '1234567890', otp, name: 'Test User' });
+    expect(res.statusCode).toEqual(201);
     expect(res.body.success).toBe(true);
-    expect(res.body.verified).toBe(true);
+    expect(res.body.data).toBeDefined();
   });
 
   it('should log in a user', async () => {
@@ -89,7 +89,7 @@ describe('Product API', () => {
 
   it('should create a new product', async () => {
     const res = await request(app)
-      .post('/api/products')
+      .post('/api/admin/products')
       .set('Authorization', `Bearer ${token}`)
       .send({
         name: 'Test Product',
@@ -128,7 +128,7 @@ describe('Product API', () => {
     const product = await Product.create({ name: 'Test Product', description: 'Test Description', purchasePrice: 80, price: 120, sellingPrice: 100, stock: 10, category: 'Test Category' });
 
     const res = await request(app)
-      .put(`/api/products/${product._id}`)
+      .put(`/api/admin/products/${product._id}`)
       .set('Authorization', `Bearer ${token}`)
       .send({ name: 'Updated Test Product' });
 
@@ -141,7 +141,7 @@ describe('Product API', () => {
     const product = await Product.create({ name: 'Test Product', description: 'Test Description', purchasePrice: 80, price: 120, sellingPrice: 100, stock: 10, category: 'Test Category' });
 
     const res = await request(app)
-      .delete(`/api/products/${product._id}`)
+      .delete(`/api/admin/products/${product._id}`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.statusCode).toEqual(200);
@@ -335,7 +335,7 @@ describe('Order API', () => {
     });
 
     const res = await request(app)
-      .put(`/api/orders/${order._id}/status`)
+      .put(`/api/admin/orders/${order._id}/status`)
       .set('Authorization', `Bearer ${adminToken}`)
       .send({ status: 'Shipped' });
 

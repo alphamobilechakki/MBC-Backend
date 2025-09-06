@@ -3,10 +3,8 @@ import {
   createOrder,
   getOrders,
   getOrderById,
-  updateOrderStatus,
-} from '../controllers/order/orderController.js';
-import authToken from '../middleware/authToken.js';
-import adminCheck from '../middleware/adminCheck.js';
+} from '../../controllers/order/orderUserController.js';
+import authToken from '../../middleware/authToken.js';
 
 const router = express.Router();
 
@@ -14,6 +12,5 @@ const router = express.Router();
 router.post('/orders', authToken, createOrder);
 router.get('/orders', authToken, getOrders);
 router.get('/orders/:id', authToken, getOrderById);
-router.put('/orders/:id/status', authToken, adminCheck, updateOrderStatus);
 
 export default router;
