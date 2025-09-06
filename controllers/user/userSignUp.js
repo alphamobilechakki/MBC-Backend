@@ -1,10 +1,9 @@
 import userModel from "../../models/userModel.js";
-import jwt from "jsonwebtoken";
+import { sendOTP } from "./otpController.js";
 
 async function userSignUpController(req, res) {
   try {
     const { mobile, address, name } = req.body;
-    //console.log('mobile', address);
 
     const user = await userModel.findOne({ mobile });
 
@@ -12,28 +11,11 @@ async function userSignUpController(req, res) {
       throw new Error("Already user exists.");
     }
 
-    const payload = {
-      mobile,
-      name,
-      role: "user",
-      addresses: address && [address],
-    };
-
-    const userData = new userModel(payload);
-    const saveUser = await userData.save();
-
-    const tokenData = {
-      _id: saveUser._id,
-      mobile : saveUser.mobile,
-      role: saveUser.role,
-    };
-    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {
-      expiresIn: "365d",
-    });
+    await sendOTP(mobile);
 
     res.status(201).json({
-      message: "User created Successfully!",
-      data: token,
+      message: "OTP sent successfully!",
+      data: null,
       success: true,
       error: false,
     });

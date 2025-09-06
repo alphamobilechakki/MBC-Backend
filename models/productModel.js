@@ -44,10 +44,17 @@ const productSchema = new mongoose.Schema(
     sizes: [String],  // ["S","M","L","XL"]
     colors: [String], // ["Red","Blue","Black"]
 
-    // Images (Cloudinary public_id only, base URL from .env)
-    images: [
+    // Images (Cloudinary )
+     images: [
       {
-        public_id: { type: String, required: true },
+        url: {
+          type: String,
+          required: true,
+        },
+        public_id: {
+          type: String,
+          required: true,
+        },
       },
     ],
 
