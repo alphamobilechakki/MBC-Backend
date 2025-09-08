@@ -12,6 +12,8 @@ import orderAdminRoutes from "./order/orderAdminRoutes.js";
 import userProfileRoutes from "./user/userProfileRoutes.js";
 import adminAuthRoutes from "./admin/adminAuthRoutes.js";
 import driverRoutes from "./admin/driverRoutes.js";
+import categoryAdminRoutes from "./category/categoryAdminRoutes.js";
+import categoryUserRoutes from "./category/categoryUserRoutes.js";
 
 const router = express.Router();
 
@@ -30,17 +32,20 @@ router.use("/admin", productAdminRoutes);
 //Review routes
 router.use("/", reviewUserRoutes);
 
+//category routes
+router.use("/",categoryUserRoutes);
+router.use("/admin", categoryAdminRoutes);
+
+
 //Order routes
 router.use("/", orderUserRoutes);
 router.use("/admin", orderAdminRoutes);
 
 //Admin routes
-router.use("/admin", adminAuthRoutes);
 router.use("/admin", driverRoutes);
+router.use("/admin", adminAuthRoutes);
 
 //User profile routes
 router.use("/user", userProfileRoutes);
 
 export default router;
-
-
