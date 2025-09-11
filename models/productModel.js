@@ -44,19 +44,13 @@ const productSchema = new mongoose.Schema(
     sizes: [String],  // ["S","M","L","XL"]
     colors: [String], // ["Red","Blue","Black"]
 
-    // Images (Cloudinary )
-     images: [
-      {
-        url: {
-          type: String,
-          required: true,
-        },
-        public_id: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+   // Images (Cloudinary)
+images: [
+  {
+    type: String,
+    required: true, // optional if you want at least one image
+  },
+],
 
     // ✅ integrate reviews
     reviews: [

@@ -1,15 +1,32 @@
-import User from '../../models/userModel.js';
+import User from "../../models/userModel.js";
 
 // Get user profile
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user?._id || req.user?.id).select(
+      "-password -__v"
+    );
+
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+        error: true,
+      });
     }
-    res.status(200).json(user);
+
+    res.status(200).json({
+      message: "User profile fetched successfully",
+      data: user,
+      success: true,
+      error: false,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+      success: false,
+      error: true,
+    });
   }
 };
 
@@ -17,27 +34,38 @@ export const getUserProfile = async (req, res) => {
 export const updateUserProfile = async (req, res) => {
   try {
     const { name, address } = req.body;
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user?._id || req.user?.id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+        error: true,
+      });
     }
 
-    user.name = name || user.name;
-    if (address) {
-      user.addresses.push(address);
-    }
+    if (name) user.name = name;
+    if (address) user.addresses.push(address);
 
     const updatedUser = await user.save();
 
     res.status(200).json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      mobile: updatedUser.mobile,
-      addresses: updatedUser.addresses,
+      message: "User profile updated successfully",
+      data: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        mobile: updatedUser.mobile,
+        addresses: updatedUser.addresses,
+      },
+      success: true,
+      error: false,
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+      success: false,
+      error: true,
+    });
   }
 };
 
@@ -47,31 +75,50 @@ export const updateAddress = async (req, res) => {
     const { addressId } = req.params;
     const { street, city, state, zipCode, country, isDefault } = req.body;
 
-    const user = await User.findById(req.user.id);
-
+    const user = await User.findById(req.user?._id || req.user?.id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+        error: true,
+      });
     }
 
     const address = user.addresses.id(addressId);
-
     if (!address) {
-      return res.status(404).json({ message: 'Address not found' });
+      return res.status(404).json({
+        message: "Address not found",
+        success: false,
+        error: true,
+      });
     }
 
-    address.street = street || address.street;
-    address.city = city || address.city;
-    address.state = state || address.state;
-    address.zipCode = zipCode || address.zipCode;
-    address.country = country || address.country;
-    address.isDefault = isDefault || address.isDefault;
+    // Update fields
+    if (street) address.street = street;
+    if (city) address.city = city;
+    if (state) address.state = state;
+    if (zipCode) address.zipCode = zipCode;
+    if (country) address.country = country;
+
+    if (isDefault) {
+      user.addresses.forEach((addr) => (addr.isDefault = false));
+      address.isDefault = true;
+    }
 
     await user.save();
 
-    res.status(200).json(user);
-
+    res.status(200).json({
+      message: "Address updated successfully",
+      data: user.addresses,
+      success: true,
+      error: false,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+      success: false,
+      error: true,
+    });
   }
 };
 
@@ -79,20 +126,39 @@ export const updateAddress = async (req, res) => {
 export const deleteAddress = async (req, res) => {
   try {
     const { addressId } = req.params;
-
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user?._id || req.user?.id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+        error: true,
+      });
+    }
+
+    const address = user.addresses.id(addressId);
+    if (!address) {
+      return res.status(404).json({
+        message: "Address not found",
+        success: false,
+        error: true,
+      });
     }
 
     user.addresses.pull(addressId);
-
     await user.save();
 
-    res.status(200).json(user);
-
+    res.status(200).json({
+      message: "Address deleted successfully",
+      data: user.addresses,
+      success: true,
+      error: false,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+      success: false,
+      error: true,
+    });
   }
 };
