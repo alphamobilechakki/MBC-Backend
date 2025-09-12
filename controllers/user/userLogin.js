@@ -1,46 +1,34 @@
-import bcrypt from 'bcryptjs';
 import userModel from '../../models/userModel.js';
-import jwt from 'jsonwebtoken';
+import { sendOTP } from './otpController.js';
+import OtpModel from '../../models/OTPSchema.js';
 
 const userLoginController = async (req, res) => {
   try {
-    const { mobile, password } = req.body;
+    const { mobile } = req.body;
 
     const user = await userModel.findOne({ mobile });
 
     if (!user) {
       return res.status(404).json({
         hasAccount: false,
-        message: "User not found",
+        message: "User not found, please sign up",
         success: false,
         error: true,
       });
     }
 
-    // ✅ Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid credentials",
-        success: false,
-        error: true,
-      });
-    }
+    // User found, proceed with OTP
+    const otp = await sendOTP(mobile);
 
-    // ✅ Create token
-    const tokenData = {
-      _id: user._id,
-      mobile: user.mobile,
-      role: user.role,
-    };
-
-    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {
-      expiresIn: "365d",
-    });
+    // Save OTP to database
+    await OtpModel.findOneAndUpdate(
+      { mobile },
+      { otp, expiresAt: new Date(Date.now() + 5 * 60 * 1000) }, // 5 minutes expiry
+      { upsert: true, new: true }
+    );
 
     res.status(200).json({
-      message: "Login Successfully",
-      token,
+      message: "OTP sent successfully",
       success: true,
       error: false,
     });

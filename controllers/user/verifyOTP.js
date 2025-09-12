@@ -8,7 +8,6 @@ async function verifyOTP(req, res) {
 
     // 1. Find OTP record
     const otpDocument = await OTPSchema.findOne({ mobile });
-
     if (!otpDocument) {
       return res.status(400).json({
         message: "No OTP request found for this number",
@@ -17,10 +16,8 @@ async function verifyOTP(req, res) {
       });
     }
 
-    // 2. Check expiry (5 minutes)
-    const isExpired = (Date.now() - otpDocument.createdAt) > 5 * 60 * 1000;
-    if (isExpired) {
-      await OTPSchema.deleteOne({ _id: otpDocument._id }); // cleanup
+    // 2. Check expiry
+    if (Date.now() > new Date(otpDocument.expiresAt).getTime()) {
       return res.status(400).json({
         message: "OTP expired. Please request a new one.",
         success: false,
@@ -37,12 +34,12 @@ async function verifyOTP(req, res) {
       });
     }
 
-    // 4. Check if user already exists
+    // 4. Check if user exists
     let user = await userModel.findOne({ mobile });
     if (!user) {
       const payload = {
         mobile,
-        name,
+        name: name || "Guest",
         role: "user",
         addresses: address ? [address] : [],
       };
@@ -50,7 +47,7 @@ async function verifyOTP(req, res) {
     }
 
     // 5. Delete OTP after success
-    await OTPSchema.deleteOne({ _id: otpDocument._id });
+    await OTPSchema.findOneAndDelete({ mobile });
 
     // 6. Generate JWT
     const tokenData = {
@@ -63,8 +60,8 @@ async function verifyOTP(req, res) {
       expiresIn: "365d",
     });
 
-    // 7. Response
-    res.status(201).json({
+    // 7. Send response
+    return res.status(201).json({
       message: "User verified & logged in successfully!",
       data: { token, user },
       success: true,
@@ -72,7 +69,7 @@ async function verifyOTP(req, res) {
     });
 
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       message: err.message || "Server error",
       error: true,
       success: false,
