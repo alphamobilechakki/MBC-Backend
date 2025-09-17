@@ -25,8 +25,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
-    // ✅ integrate reviews
-        reviews: [
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart",
+    },
+    reviews: [
           {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Review",
@@ -35,5 +38,5 @@ const userSchema = new mongoose.Schema({
 },
 {timestamps : true});
 
-const userModel = mongoose.model('User' , userSchema);9
+const userModel = mongoose.model('User' , userSchema);
 export default userModel;

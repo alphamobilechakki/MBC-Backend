@@ -12,7 +12,8 @@ const router = express.Router();
 // ✅ Admin Product routes (no multer, just URLs in req.body)
 router.post(
   '/products',
-
+  authToken,
+  adminCheck,
   createProduct
 );
 

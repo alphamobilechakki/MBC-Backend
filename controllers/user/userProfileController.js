@@ -162,3 +162,41 @@ export const deleteAddress = async (req, res) => {
     });
   }
 };
+
+// Get user default address
+export const getDefaultAddress = async (req, res) => {
+  try {
+    const user = await User.findById(req.user?._id || req.user?.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+        error: true,
+      });
+    }
+
+    const defaultAddress = user.addresses.find((address) => address.isDefault);
+
+    if (!defaultAddress) {
+      return res.status(404).json({
+        message: "Default address not found",
+        success: false,
+        error: true,
+      });
+    }
+
+    res.status(200).json({
+      message: "Default address fetched successfully",
+      data: defaultAddress,
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+      success: false,
+      error: true,
+    });
+  }
+};

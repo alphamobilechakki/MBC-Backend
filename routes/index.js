@@ -14,6 +14,7 @@ import adminAuthRoutes from "./admin/adminAuthRoutes.js";
 import driverRoutes from "./admin/driverRoutes.js";
 import categoryAdminRoutes from "./category/categoryAdminRoutes.js";
 import categoryUserRoutes from "./category/categoryUserRoutes.js";
+import cartRoutes from "./cart/cartRoutes.js";
 
 const router = express.Router();
 
@@ -47,5 +48,8 @@ router.use("/admin", adminAuthRoutes);
 
 //User profile routes
 router.use("/user", userProfileRoutes);
+
+//Cart routes
+router.use("/cart", cartRoutes);
 
 export default router;
