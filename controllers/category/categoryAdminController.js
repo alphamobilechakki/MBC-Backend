@@ -18,9 +18,11 @@ const uploadToCloudinary = (file) => {
 // Create a new category
 export const createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
-    if (!name) {
-      return res.status(400).json({ message: "Category name is required" });
+    const { name, title } = req.body;
+    if (!name || !title) {
+      return res
+        .status(400)
+        .json({ message: "Category name and title are required" });
     }
 
     const existingCategory = await Category.findOne({ name });
@@ -35,6 +37,7 @@ export const createCategory = async (req, res) => {
 
     const category = new Category({
       name,
+      title,
       image: imageResult?.secure_url,
     });
 
@@ -67,7 +70,7 @@ export const getAllCategories = async (req, res) => {
 export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, title } = req.body;
 
     let imageResult;
     if (req.file) {
@@ -86,6 +89,7 @@ export const updateCategory = async (req, res) => {
     }
 
     category.name = name || category.name;
+    category.title = title || category.title;
     category.image = imageResult?.secure_url || category.image;
 
     await category.save();
