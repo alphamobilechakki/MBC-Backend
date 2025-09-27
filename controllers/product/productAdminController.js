@@ -1,6 +1,6 @@
 import Product from '../../models/productModel.js';
 
-// ✅ Create a new product
+// ✅ Create a new product....................................................................................................................................................................
 export const createProduct = async (req, res) => {
   try {
     const {
@@ -47,7 +47,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// ✅ Update a product by ID
+// ✅ Update a product by ID.............................................................................................................................................................
 export const updateProduct = async (req, res) => {
   try {
     const {
@@ -110,7 +110,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// ✅ Delete a product by ID
+// ✅ Delete a product by ID..........................................................................................................................................................
 export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);

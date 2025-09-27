@@ -1,6 +1,6 @@
 import Order from '../../models/orderModel.js';
 
-// Update order status (for admins)
+// Update order status (for admins).........................................................................................................................................................
 export const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;

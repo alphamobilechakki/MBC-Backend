@@ -1,7 +1,7 @@
 import Driver from '../../models/driverModel.js';
 import bcrypt from 'bcryptjs';
 
-// Create a new driver
+// Create a new driver..................................................................................................................................................................
 export const createDriver = async (req, res) => {
   try {
     const { name, mobile, licenseNumber, vehicleNumber, password } = req.body;
@@ -34,7 +34,7 @@ export const createDriver = async (req, res) => {
   }
 };
 
-// Get all drivers
+// Get all drivers.................................................................................................................................................................................................................................
 export const getDrivers = async (req, res) => {
   try {
     const drivers = await Driver.find({}).populate('createdBy', 'name');

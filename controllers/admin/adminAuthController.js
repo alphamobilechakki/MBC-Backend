@@ -29,7 +29,7 @@ export const adminSignUp = async (req, res) => {
   }
 };
 
-// Admin login
+// Admin login......................................................................................................................................................................
 export const adminLogin = async (req, res) => {
   try {
     const { mobile, password } = req.body;

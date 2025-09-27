@@ -1,6 +1,6 @@
 import Product from '../../models/productModel.js';
 
-// Get all products with filtering and pagination
+// Get all products with filtering and pagination........................................................................................................................................
 export const getProducts = async (req, res) => {
   try {
     const { category, price, rating, page = 1, limit = 10 } = req.query;
@@ -39,7 +39,7 @@ export const getProducts = async (req, res) => {
   }
 };
 
-// Get a single product by ID
+// Get a single product by ID...........................................................................................................................................................
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -62,7 +62,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// Search products
+// Search products.......................................................................................................................................................................
 export const searchProducts = async (req, res) => {
   try {
     const { q } = req.query;
