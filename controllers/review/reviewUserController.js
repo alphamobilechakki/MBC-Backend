@@ -17,7 +17,7 @@ export const createReview = async (req, res) => {
 
     await review.save();
 
-    // Add the review to the product's reviews array
+    // Add the review to the product's reviews array.....................................................................................................................................................................
     await Product.findByIdAndUpdate(productId, {
       $push: { reviews: review._id },
     });
@@ -35,7 +35,7 @@ export const createReview = async (req, res) => {
   }
 };
 
-// Get all reviews for a product
+// Get all reviews for a product.......................................................................................................................................................
 export const getReviewsByProduct = async (req, res) => {
   try {
     const { productId } = req.params;

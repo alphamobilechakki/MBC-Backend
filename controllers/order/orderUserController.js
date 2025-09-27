@@ -1,6 +1,6 @@
 import Order from '../../models/orderModel.js';
 
-// Create a new order
+// Create a new order......................................................................................................................................................................................
 export const createOrder = async (req, res) => {
   try {
     const { orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
@@ -32,7 +32,7 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Get all orders for a user
+// Get all orders for a user.......................................................................................................................................................................................................
 export const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id }).populate('user', 'name');
@@ -50,7 +50,7 @@ export const getOrders = async (req, res) => {
   }
 };
 
-// Get a single order by ID
+// Get a single order by ID..................... ......................................................................................................................................................................................................
 export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate('user', 'name mobile');

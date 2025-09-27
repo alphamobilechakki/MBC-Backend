@@ -104,7 +104,7 @@ export const updateCategory = async (req, res) => {
   }
 };
 
-// Delete a category
+// Delete a category..........................................................................................................................................................................................
 export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
