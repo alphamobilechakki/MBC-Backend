@@ -21,6 +21,9 @@ export const getCart = async (req, res) => {
   }
 };
 
+
+
+
 // Add item to cart
 export const addItemToCart = async (req, res) => {
   try {
