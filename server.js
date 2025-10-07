@@ -9,28 +9,13 @@ import routes from "./routes/index.js";
 
 const app = express();
 
-// ✅ CORS setup (production-safe)
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "http://127.0.0.1:3000",
-  process.env.FRONTEND_URL, // your production frontend URL
-];
+app.use(cors());
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS: " + origin));
-    },
-    credentials: true,
-  })
-);
+
 
 // ✅ Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ✅ Routes
 app.use("/api", routes);
@@ -38,10 +23,11 @@ app.use("/api", routes);
 // ✅ Start server only after DB connection attempt
 const PORT = process.env.PORT || 8080;
 
+let server;
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => {
+    server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (err) {
@@ -52,4 +38,4 @@ const startServer = async () => {
 
 startServer();
 
-export { app };
+export { app, server };

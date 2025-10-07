@@ -6,14 +6,16 @@ import {
 } from '../../controllers/product/productAdminController.js';
 import authToken from '../../middleware/authToken.js';
 import adminCheck from '../../middleware/adminCheck.js';
+import cloudinaryUploadMultiple from '../../middleware/cloudinaryUploadMultiple.js';
 
 const router = express.Router();
 
-// ✅ Admin Product routes (no multer, just URLs in req.body)
+// ✅ Admin Product routes
 router.post(
   '/products',
   authToken,
   adminCheck,
+  cloudinaryUploadMultiple,
   createProduct
 );
 
@@ -21,6 +23,7 @@ router.put(
   '/products/:id',
   authToken,
   adminCheck,
+  cloudinaryUploadMultiple,
   updateProduct
 );
 

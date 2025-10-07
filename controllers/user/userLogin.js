@@ -28,7 +28,8 @@ const userLoginController = async (req, res) => {
     );
 
     res.status(200).json({
-      message: "OTP sent successfully",
+      hasAccount: true,
+      message: "User found, OTP sent for verification",
       success: true,
       error: false,
     });
