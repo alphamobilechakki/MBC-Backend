@@ -7,5 +7,5 @@ import adminCheck from "../../middleware/adminCheck.js";
 
 const router = express.Router();
 
-router.get("/",authToken , adminCheck, getAllContacts);   // GET  -> /api/`contact
+router.get("/" ,authToken , adminCheck, getAllContacts);   // GET  -> /api/contact
 export default router;
