@@ -1,26 +1,25 @@
 # 1. Base image (Node.js official image)
-FROM node:20
+FROM node:20-alpine AS base
 
-# 2. Create a non-root user and set up the working directory
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 express
+# 2. Create a non-root user and working directory
+RUN addgroup --system nodejs && adduser --system express
 WORKDIR /app
 
-# 3. Copy package.json and package-lock.json first (for caching)
+# 3. Copy only package files first for caching
 COPY package*.json ./
 
-# 4. Install dependencies (only production ones for smaller image)
-RUN npm install --production
+# 4. Install production dependencies
+RUN npm ci --only=production
 
-# 5. Copy the rest of your source code and set ownership
+# 5. Copy the rest of the application
 COPY . .
-RUN chown -R express:nodejs /app
 
-# 6. Switch to the non-root user
+# 6. Change ownership and switch user
+RUN chown -R express:nodejs /app
 USER express
 
-# 7. Expose the backend port
+# 7. Expose port (Cloud Run listens on $PORT, so use it)
 EXPOSE 8080
 
-# 8. Start your app
-CMD [ "node", "server.js" ]
+# 8. Start the app
+CMD ["node", "server.js"]
