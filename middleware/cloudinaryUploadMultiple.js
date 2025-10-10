@@ -19,7 +19,7 @@ const cloudinaryUploadMultiple = (req, res, next) => {
     const uploadPromises = req.files.map(file => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: 'your_folder_name' }, // Optional: specify a folder in Cloudinary
+          { folder: 'products' }, // Optional: specify a folder in Cloudinary
           (error, result) => {
             if (error) {
               reject(error);
