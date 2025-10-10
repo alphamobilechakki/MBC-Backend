@@ -15,8 +15,9 @@ export const createProduct = async (req, res) => {
       colors,
       isFeatured,
       status,
-      images = [], // ✅ accept array of image URLs
     } = req.body;
+
+    const images = req.body.images || [];
 
     const product = new Product({
       name,
@@ -30,7 +31,7 @@ export const createProduct = async (req, res) => {
       colors,
       isFeatured,
       status,
-      images, // ✅ directly store URLs
+      images,
     });
 
     await product.save();
@@ -62,7 +63,6 @@ export const updateProduct = async (req, res) => {
       colors,
       isFeatured,
       status,
-      images, // ✅ array of URLs
     } = req.body;
 
     const product = await Product.findById(req.params.id);
@@ -71,6 +71,11 @@ export const updateProduct = async (req, res) => {
         success: false,
         message: 'Product not found',
       });
+    }
+
+    let images = product.images;
+    if (req.body.images) {
+      images = req.body.images;
     }
 
     const updatedProductData = {
@@ -85,7 +90,7 @@ export const updateProduct = async (req, res) => {
       colors,
       isFeatured,
       status,
-      images: images || product.images, // ✅ update if new URLs provided
+      images,
     };
 
     const updatedProduct = await Product.findByIdAndUpdate(
