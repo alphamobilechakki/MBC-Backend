@@ -5,7 +5,7 @@ import Booking from "../../models/bookingModel.js";
 // =========================
 export const createUserBooking = async (req, res) => {
   try {
-    const { name, mobile, serviceType, address, user } = req.body;
+    const { name, mobile, serviceType, address, user, date } = req.body;
 
     const booking = new Booking({
       name,
@@ -13,6 +13,7 @@ export const createUserBooking = async (req, res) => {
       serviceType,
       address,
       user,
+      date: date || new Date(), // ✅ Use provided date or current date
     });
 
     await booking.save();
@@ -26,6 +27,7 @@ export const createUserBooking = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // =========================
 // Cancel booking (by user)
