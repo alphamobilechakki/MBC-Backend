@@ -39,6 +39,9 @@ import userBookingRoutes from "./booking/userBookingRoutes.js";
 import driverBookingRoutes from "./booking/driverBookingRoutes.js";
 import adminBookingRoutes from "./booking/adminBookingRoutes.js";
 
+// ✅ Wishlist Routes
+import wishlistRoutes from "./wishlist/wishlistRoutes.js";
+
 const router = express.Router();
 
 // ===============================
@@ -89,6 +92,11 @@ router.use("/user", userProfileRoutes);
 // ✅ Cart Routes
 // ===============================
 router.use("/cart", cartRoutes);
+
+// ===============================
+// ✅ Wishlist Routes
+// ===============================
+router.use("/wishlist", wishlistRoutes);
 
 // ===============================
 // ✅ Contact Routes
