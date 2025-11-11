@@ -20,6 +20,11 @@ app.use(express.urlencoded({ extended: true }));
 // ✅ Routes
 app.use("/api", routes);
 
+
+
+
+
+
 // ✅ Start server only after DB connection attempt
 const PORT = process.env.PORT || 8080;
 
@@ -30,6 +35,8 @@ const startServer = async () => {
     server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
+
+    
   } catch (err) {
     console.error("❌ Failed to connect to DB", err);
     process.exit(1); // Crash early if DB is mandatory
