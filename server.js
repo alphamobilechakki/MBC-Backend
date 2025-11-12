@@ -20,11 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 // ✅ Routes
 app.use("/api", routes);
 
-
-
-
-
-
 // ✅ Start server only after DB connection attempt
 const PORT = process.env.PORT || 8080;
 
