@@ -28,12 +28,12 @@ const startServer = async () => {
   try {
     await connectDB();
     server = app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port : ${PORT}`);
     });
 
     
   } catch (err) {
-    console.error("❌ Failed to connect to DB", err);
+    console.error("❌ Failed to connect to DATABASE", err);
     process.exit(1); // Crash early if DB is mandatory
   }
 };
