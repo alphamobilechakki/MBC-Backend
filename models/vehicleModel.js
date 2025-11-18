@@ -1,33 +1,17 @@
 import mongoose from "mongoose";
 
 const vehicleSchema = new mongoose.Schema({
-    vehicleNumber: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    rc: {
-        type: String, // URL to the uploaded file
-        required: true,
-    },
-    puc: {
-        type: String, // URL to the uploaded file
-        required: true,
-    },
-    insurance: {
-        type: String, // URL to the uploaded file
-        required: true,
-    },
-    vehicleType: {
-        type: String,
-        required: true,
-    },
-    kilometer: {
-        type: Number,
-        required: true,
-    },
-});
+    vehicleNumber: { type: String, required: true, unique: true },
+    rcUpload: { type: String, required: true },
+    pucUpload: { type: String, required: true },
+    insuranceUpload: { type: String, required: true },
+    vehicleType: { type: String, enum: ['van'], default: 'van' },
+    distanceTravelled: { type: Number, default: 0 },
+    driver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Driver"
+    }
+}, { timestamps: true });
 
-const Vehicle = mongoose.model("Vehicle", vehicleSchema);
-
-export default Vehicle;
+const vehicleModel = mongoose.model("Vehicle", vehicleSchema);
+export default vehicleModel;

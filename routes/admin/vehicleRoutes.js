@@ -5,33 +5,19 @@ import {
   getVehicleById,
   updateVehicle,
   deleteVehicle,
+  updateVehicleDriver,
 } from '../../controllers/admin/vehicleController.js';
-import upload from '../../middleware/multer.js';
-import cloudinaryUpload from '../../middleware/cloudinaryUploadMultiple.js';
+import authToken from '../../middleware/authToken.js';
+import adminCheck from '../../middleware/adminCheck.js';
 
 const router = express.Router();
 
-router.post(
-  '/',
-  upload.fields([
-    { name: 'rc', maxCount: 1 },
-    { name: 'puc', maxCount: 1 },
-    { name: 'insurance', maxCount: 1 },
-  ]),
-  cloudinaryUpload,
-  createVehicle
-);outer.get('/', getVehicles);
-router.get('/:id', getVehicleById);
-router.put(
-  '/:id',
-  upload.fields([
-    { name: 'rc', maxCount: 1 },
-    { name: 'puc', maxCount: 1 },
-    { name: 'insurance', maxCount: 1 },
-  ]),
-  cloudinaryUpload,
-  updateVehicle
-);
-router.delete('/:id', deleteVehicle);
+// Vehicle routes
+router.post('/vehicles', authToken, adminCheck, createVehicle);
+router.get('/vehicles', authToken, adminCheck, getVehicles);
+router.get('/vehicles/:id', authToken, adminCheck, getVehicleById);
+router.put('/vehicles/:id', authToken, adminCheck, updateVehicle);
+router.delete('/vehicles/:id', authToken, adminCheck, deleteVehicle);
+router.put('/vehicles/:id/driver', authToken, adminCheck, updateVehicleDriver);
 
 export default router;

@@ -23,6 +23,7 @@ import userProfileRoutes from "./user/userProfileRoutes.js";
 // ✅ Admin Routes
 import adminAuthRoutes from "./admin/adminAuthRoutes.js";
 import driverRoutes from "./admin/driverRoutes.js";
+import vehicleRoutes from "./admin/vehicleRoutes.js";
 
 // ✅ Category Routes
 import categoryAdminRoutes from "./category/categoryAdminRoutes.js";
@@ -42,6 +43,9 @@ import adminBookingRoutes from "./booking/adminBookingRoutes.js";
 
 // ✅ Wishlist Routes
 import wishlistRoutes from "./wishlist/wishlistRoutes.js";
+
+// ✅ Trip Routes
+import tripRoutes from "./trip/tripRoutes.js";
 
 const router = express.Router();
 
@@ -83,6 +87,7 @@ router.use("/admin", orderAdminRoutes);
 // ===============================
 router.use("/admin", driverRoutes);
 router.use("/admin", adminAuthRoutes);
+router.use("/admin", vehicleRoutes);
 
 // ===============================
 // ✅ User Profile Routes
@@ -111,5 +116,10 @@ router.use("/admin/contact", contactAdminRoutes);
 router.use("/user/bookings", userBookingRoutes);
 router.use("/driver/bookings", driverBookingRoutes);
 router.use("/admin/bookings", adminBookingRoutes);
+
+// ===============================
+// ✅ Trip Routes
+// ===============================
+router.use("/", tripRoutes);
 
 export default router;
