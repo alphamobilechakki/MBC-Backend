@@ -1,36 +1,36 @@
 import axios from "axios";
-import { generateOTP } from "../../utils/otpGenerator.js";
 
-async function sendOTP(mobile) {
-  const otp = generateOTP();
+async function sendOTP(mobile, otp) {
   const message = `Your OTP for login is ${otp}`;
 
-  // New provider credentials (from .env)
-  const apiUrl = process.env.SMS_API_URL || "http://sms.par-ken.com/api/smsapi";
-  const apiKey = process.env.SMS_API_KEY;           // e.g. 9b9cf9dbd9f4a18a817e845de787c578
-  const senderId = process.env.SMS_SENDER_ID;       // e.g. MYSQFT
-  const route = process.env.SMS_ROUTE || "1";       // e.g. 1 for transactional
-  const templateId = process.env.SMS_TEMPLATE_ID;   // e.g. 1207161838546260705
+  // Par-Ken SMS credentials
+  const apiUrl = process.env.SMS_API_URL || "http://sms.par-ken.com/V2/http-api.php";
+  const username = process.env.SMS_USERNAME || "mobilechakki";
+  const password = process.env.SMS_PASSWORD || "123456";
+  const senderId = process.env.SMS_SENDER_ID || "INFSMS";  // set your approved sender ID
+  const route = process.env.SMS_ROUTE || "1";               // transactional route
 
   try {
-    // Make GET request to Par-Ken SMS API
-    const { data } = await axios.get(apiUrl, {
+    const response = await axios.get(apiUrl, {
       params: {
-        key: apiKey,
-        routeid: route,
+        username: username,
+        password: password,
         senderid: senderId,
-        templateid: templateId,
-        contacts: mobile,
-        msg: message,
+        route: route,
+        number: mobile,
+        message: message,
       },
     });
 
-    console.log("Par-Ken SMS response:", data);
+    // Check for failed response
+    if (response.status !== 200 || response.data.includes("ERROR")) {
+      throw new Error(`Failed to send OTP: ${response.data}`);
+    }
   } catch (err) {
     console.error("Error sending OTP:", err.message);
+    throw err;
   }
-
-  return otp;
 }
 
 export { sendOTP };
+  

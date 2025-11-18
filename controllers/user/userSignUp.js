@@ -1,6 +1,7 @@
 import userModel from "../../models/userModel.js";
 import { sendOTP } from "./otpController.js";
 import OTPSchema from "../../models/OTPSchema.js";
+import { generateOTP } from "../../utils/otpGenerator.js";
 
 async function userSignUpController(req, res) {
   try {
@@ -17,12 +18,13 @@ async function userSignUpController(req, res) {
     }
 
     // Generate & send OTP
-    const otp = await sendOTP(mobile);
+    const otp = generateOTP();
+    await sendOTP(mobile, otp);
 
     // Save or update OTP
     await OTPSchema.findOneAndUpdate(
       { mobile },
-      { otp, createdAt: new Date() },
+      { otp, expiresAt: new Date(Date.now() + 5 * 60 * 1000) }, // 5 minutes expiry
       { upsert: true, new: true }
     );
 

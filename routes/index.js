@@ -2,8 +2,9 @@ import express from "express";
 import userLoginController from "../controllers/user/userLogin.js";
 import userSignUpController from "../controllers/user/userSignUp.js";
 import authToken from "../middleware/authToken.js";
-import { sendOTP } from "../controllers/user/otpController.js";
+import sendOtpController from "../controllers/user/sendOtpController.js";
 import verifyOTP from "../controllers/user/verifyOTP.js";
+import { otpLimiter } from "../middleware/rateLimiter.js";
 
 // ✅ Product Routes
 import productUserRoutes from "./product/productUserRoutes.js";
@@ -51,8 +52,8 @@ router.post("/signup", userSignUpController);
 router.post("/login", userLoginController);
 
 // ✅ Mobile Verification
-router.post("/sendOTP", sendOTP);
-router.post("/verifyOTP", verifyOTP);
+router.post("/sendOTP", otpLimiter, sendOtpController);
+router.post("/verifyOTP", otpLimiter, verifyOTP);
 
 // ===============================
 // ✅ Product Routes

@@ -1,5 +1,7 @@
+import { randomInt } from 'crypto';
+
 function generateOTP() {
-  return Math.floor(1000 + Math.random() * 9000).toString();
+  return randomInt(1000, 10000).toString();
 }
 
 export { generateOTP };

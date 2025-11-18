@@ -1,9 +1,9 @@
-import userModel from '../../models/userModel.js';
+import { generateOTP } from '../../utils/otpGenerator.js';
 import { sendOTP } from './otpController.js';
 import OtpModel from '../../models/OTPSchema.js';
-import { generateOTP } from '../../utils/otpGenerator.js';
+import userModel from '../../models/userModel.js';
 
-const userLoginController = async (req, res) => {
+const sendOtpController = async (req, res) => {
   try {
     const { mobile } = req.body;
 
@@ -20,7 +20,15 @@ const userLoginController = async (req, res) => {
 
     // User found, proceed with OTP
     const otp = generateOTP();
-    await sendOTP(mobile, otp);
+    try {
+      await sendOTP(mobile, otp);
+    } catch (error) {
+      return res.status(500).json({
+        message: "Failed to send OTP. Please try again later.",
+        success: false,
+        error: true,
+      });
+    }
 
     // Save OTP to database
     await OtpModel.findOneAndUpdate(
@@ -30,8 +38,7 @@ const userLoginController = async (req, res) => {
     );
 
     res.status(200).json({
-      hasAccount: true,
-      message: "User found, OTP sent for verification",
+      message: "OTP sent for verification",
       success: true,
       error: false,
     });
@@ -44,4 +51,4 @@ const userLoginController = async (req, res) => {
   }
 };
 
-export default userLoginController;
+export default sendOtpController;
