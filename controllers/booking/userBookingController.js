@@ -5,15 +5,75 @@ import Booking from "../../models/bookingModel.js";
 // =========================
 export const createUserBooking = async (req, res) => {
   try {
-    const { name, mobile, serviceType, address, user, date } = req.body;
+    const { name, mobile, serviceType, user, date, address } = req.body;
 
+    let finalAddress = null;
+
+    // -----------------------------
+    // 🟦 CASE 1: MANUAL ADDRESS
+    // -----------------------------
+    if (address?.mode === "manual") {
+      if (!address.manualAddress) {
+        return res.status(400).json({
+          success: false,
+          message: "Manual address data is required",
+        });
+      }
+
+      finalAddress = {
+        mode: "manual",
+        manualAddress: {
+          street: address.manualAddress.street,
+          city: address.manualAddress.city,
+          state: address.manualAddress.state,
+          zipCode: address.manualAddress.zipCode,
+          country: address.manualAddress.country || "India",
+        },
+      };
+    }
+
+    // -----------------------------
+    // 🟩 CASE 2: MAP ADDRESS (LAT/LNG)
+    // -----------------------------
+    else if (address?.mode === "map") {
+      if (!address.mapAddress?.lat || !address.mapAddress?.lng) {
+        return res.status(400).json({
+          success: false,
+          message: "Latitude and Longitude are required for map address",
+        });
+      }
+
+      finalAddress = {
+        mode: "map",
+        mapAddress: {
+          lat: address.mapAddress.lat,
+          lng: address.mapAddress.lng,
+          formattedAddress: address.mapAddress.formattedAddress || "",
+        },
+      };
+    }
+
+    // -----------------------------
+    // ❌ Invalid / Missing Address
+    // -----------------------------
+    else {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Address mode must be either 'manual' or 'map' with correct data",
+      });
+    }
+
+    // -----------------------------
+    // ✨ Create booking
+    // -----------------------------
     const booking = new Booking({
       name,
       mobile,
       serviceType,
-      address,
       user,
-      date: date || new Date(), // ✅ Use provided date or current date
+      date: date || new Date(),
+      address: finalAddress,
     });
 
     await booking.save();
@@ -24,7 +84,10 @@ export const createUserBooking = async (req, res) => {
       data: booking,
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

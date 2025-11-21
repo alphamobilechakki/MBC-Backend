@@ -46,6 +46,7 @@ import wishlistRoutes from "./wishlist/wishlistRoutes.js";
 
 // ✅ Trip Routes
 import tripRoutes from "./trip/tripRoutes.js";
+import paymentRoutes from "./payment/paymentRoutes.js";
 
 const router = express.Router();
 
@@ -121,5 +122,10 @@ router.use("/admin/bookings", adminBookingRoutes);
 // ✅ Trip Routes
 // ===============================
 router.use("/", tripRoutes);
+
+// ===============================
+// ✅ Payment Routes
+// ===============================
+router.use("/payment", paymentRoutes);
 
 export default router;

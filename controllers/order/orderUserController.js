@@ -1,6 +1,8 @@
 import Order from '../../models/orderModel.js';
+import cashfree from '../../config/cashfree.js';
+import User from '../../models/userModel.js';
 
-// Create a new order......................................................................................................................................................................................
+// Create a new order
 export const createOrder = async (req, res) => {
   try {
     const { orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
@@ -17,11 +19,34 @@ export const createOrder = async (req, res) => {
       totalPrice,
     });
 
-    await order.save();
+    const savedOrder = await order.save();
+
+    const user = await User.findById(userId);
+
+    const request = {
+      order_amount: savedOrder.totalPrice,
+      order_currency: 'INR',
+      order_note: 'Test order',
+      customer_details: {
+        customer_id: user._id.toString(),
+        customer_name: user.name,
+        customer_email: user.email,
+        customer_phone: user.mobile,
+      },
+      order_meta: {
+        return_url: `http://localhost:3000/order/{order_id}`,
+      },
+    };
+
+    const response = await cashfree.orders.create(request);
+    savedOrder.cashfree_order_id = response.data.order_id;
+    await savedOrder.save();
+
 
     res.status(201).json({
       success: true,
-      data: order,
+      data: savedOrder,
+      cashfreeOrder: response.data,
       message: 'Order created successfully',
     });
   } catch (error) {

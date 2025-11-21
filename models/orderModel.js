@@ -36,12 +36,24 @@ const orderSchema = new mongoose.Schema(
     // Payment
     paymentMethod: {
       type: String,
-      enum: ["COD", "Card", "UPI", "NetBanking"],
+      enum: ["COD", "Card", "UPI", "NetBanking", "Cashfree"],
       default: "COD",
     },
+    paymentGateway: {
+      type: String,
+      enum: ["Cashfree", "Other"],
+    },
     paymentInfo: {
+      cashfree_order_id: { type: String },
       id: String, // Transaction ID (from gateway)
       status: String,
+      payment_method: String,
+      payment_status: String,
+    },
+    cashfree_order_id: {
+      type: String,
+      unique: true,
+      sparse: true,
     },
 
     // Price details
@@ -53,7 +65,7 @@ const orderSchema = new mongoose.Schema(
     // Status tracking
     orderStatus: {
       type: String,
-      enum: ["Processing", "Shipped", "Delivered", "Cancelled"],
+      enum: ["Processing", "Shipped", "Delivered", "Cancelled", "Payment Failed"],
       default: "Processing",
     },
     deliveredAt: Date,
