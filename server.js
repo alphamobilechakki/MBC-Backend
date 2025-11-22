@@ -9,37 +9,44 @@ import routes from "./routes/index.js";
 
 const app = express();
 
+// CORS
 app.use(cors());
 
-
-
-// ✅ Middlewares
-app.use(express.json({
-  verify: (req, res, buf) => {
-    req.rawBody = buf;
-  }
-}));
+// Body parsers
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Routes
+// Routes
 app.use("/api", routes);
 
-// ✅ Start server only after DB connection attempt
+// Cloud Run port
 const PORT = process.env.PORT || 8080;
 
 let server;
+
 const startServer = async () => {
+  console.log("🚀 Starting server...");
+
+  // Try DB Connection (but DO NOT crash if it fails)
   try {
     await connectDB();
-    server = app.listen(PORT, () => {
-      console.log(`🚀 Server running on port : ${PORT}`);
-    });
-
-    
+    console.log("✅ Database connected successfully");
   } catch (err) {
-    console.error("❌ Failed to connect to DATABASE", err);
-    process.exit(1); // Crash early if DB is mandatory
+    console.error("❌ ERROR: Database connection failed");
+    console.error(err);
+    console.log("⚠️ Continuing without DB (Cloud Run will still start the container)");
   }
+
+  // Always start the HTTP server
+  server = app.listen(PORT, () => {
+    console.log(`🔥 Server running on port ${PORT}`);
+  });
 };
 
 startServer();
