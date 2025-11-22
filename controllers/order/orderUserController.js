@@ -34,14 +34,13 @@ export const createOrder = async (req, res) => {
         customer_phone: user.mobile,
       },
       order_meta: {
-        return_url: `http://localhost:3000/order/{order_id}`,
+        return_url: `http://localhost:8080/order/{order_id}`,
       },
     };
 
     const response = await cashfree.orders.create(request);
     savedOrder.cashfree_order_id = response.data.order_id;
     await savedOrder.save();
-
 
     res.status(201).json({
       success: true,
