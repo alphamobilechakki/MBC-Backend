@@ -12,6 +12,10 @@ const app = express();
 // CORS
 app.use(cors());
 
+
+
+app.use("/api/webhook", express.raw({ type: "*/*" }));
+
 // Body parsers
 app.use(
   express.json({
@@ -21,6 +25,7 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
+
 
 // Routes
 app.use("/api", routes);

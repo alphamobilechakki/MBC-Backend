@@ -35,7 +35,7 @@ export const createOrder = async (req, res) => {
       customer_details: {
         customer_id: customer_details.customer_id,
         customer_name: customer_details.customer_name,
-        customer_email: customer_details.customer_email,
+        customer_email: customer_details.customer_email || "mobilechakkidemo@gmail.com",
         customer_phone: customer_details.customer_phone,
       },
 
@@ -100,7 +100,7 @@ export const handleWebhook = async (req, res) => {
     const timestamp = req.headers["x-webhook-timestamp"];
     const payload = req.rawBody;
 
-    const secretKey = process.env.CASHFREE_SECRET_KEY;
+    const secretKey = process.env.CASHFREE_CLIENT_SECRET;
 
     const verifier = `${timestamp}${payload}`;
     const generatedSignature = crypto
