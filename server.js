@@ -51,6 +51,8 @@ const startServer = async () => {
   // Always start the HTTP server
   server = app.listen(PORT, () => {
     console.log(`🔥 Server running on port ${PORT}`);
+    // console.log(process.env.CASHFREE_CLIENT_ID, process.env.CASHFREE_CLIENT_SECRET);
+
   });
 };
 

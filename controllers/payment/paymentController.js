@@ -1,4 +1,4 @@
-import cashfree from "../../config/cashfree.js";
+import { PG } from "../../config/cashfree.js";
 import crypto from "crypto";
 import Transaction from "../../models/transactionModel.js";
 import User from "../../models/userModel.js";
@@ -10,10 +10,10 @@ import mongoose from "mongoose";
 |  CREATE ORDER (Frontend → Backend → Cashfree)
 |--------------------------------------------------------------------------
 */
-
 export const createOrder = async (req, res) => {
   try {
     console.log("🟦 Creating Cashfree Order...");
+    console.log("PG Test:", PG);
 
     const { order_amount, customer_details } = req.body;
 
@@ -23,52 +23,53 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    // Generate Cashfree order_id
+    // Generate unique order_id
     const orderId = "order_" + Date.now();
 
     const finalRequest = {
       order_id: orderId,
       order_amount: Number(order_amount),
       order_currency: "INR",
-      order_note: "Wallet Recharge",
 
       customer_details: {
         customer_id: customer_details.customer_id,
         customer_name: customer_details.customer_name,
-        customer_email: customer_details.customer_email || "mobilechakkidemo@gmail.com",
+        customer_email:
+          customer_details.customer_email || "mobilechakkidemo@gmail.com",
         customer_phone: customer_details.customer_phone,
       },
 
       order_meta: {
-        return_url: `https://mobilechakki.com/payment?order_id=${orderId}&order_token={order_token}`,
+        return_url: `https://mobilechakki.com/payment?order_id=${orderId}&order_token=order_token`,
         notify_url: "https://api.mobilechakki.com/api/payment-webhook",
       },
     };
 
     console.log("➡ Final Request:", finalRequest);
 
-    // CREATE ORDER ON CASHFREE
-    const response = await cashfree.PGCreateOrder("2023-08-01", finalRequest);
-    const order = response.data;
+    // USE PG — NOT cashfree.PG
+    const cfRes = await PG.orders.create(finalRequest);
 
-    // SAVE IN DB (Transaction Table)
+    const order = cfRes.data;
+    console.log("✅ Cashfree Order Created:", order);
+
     await Transaction.create({
       userId: customer_details.customer_id,
       orderId: order.order_id,
-      payment_session_id: order.payment_session_id,
+      paymentSessionId: order.payment_session_id,
       amount: order_amount,
-      status: "initiated",
+      txStatus: "initiated",
       txnType: "credited",
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
     return res.json({
       success: true,
       order,
     });
+
   } catch (err) {
     console.error("❌ Cashfree API Error:", err.response?.data || err.message);
+
     return res.status(500).json({
       error: "Cashfree API Failed",
       detail: err.response?.data || err.message,
