@@ -9,7 +9,7 @@ import authToken from '../../middleware/authToken.js';
 const router = express.Router();
 
 // Order routes
-router.post('/orders', authToken, createOrder);
+router.post('/orders', createOrder);
 router.get('/orders', authToken, getOrders);
 router.get('/orders/:id', authToken, getOrderById);
 

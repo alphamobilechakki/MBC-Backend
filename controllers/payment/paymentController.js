@@ -1,4 +1,4 @@
-import { PG } from "../../config/cashfree.js";
+import PG from "../../config/cashfree.js";
 import crypto from "crypto";
 import Transaction from "../../models/transactionModel.js";
 import User from "../../models/userModel.js";
@@ -48,7 +48,7 @@ export const createOrder = async (req, res) => {
     console.log("➡ Final Request:", finalRequest);
 
     // USE PG — NOT cashfree.PG
-    const cfRes = await PG.orders.create(finalRequest);
+const cfRes = await PG.orders.create(finalRequest);
 
     const order = cfRes.data;
     console.log("✅ Cashfree Order Created:", order);
