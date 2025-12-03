@@ -24,6 +24,7 @@ import userProfileRoutes from "./user/userProfileRoutes.js";
 import adminAuthRoutes from "./admin/adminAuthRoutes.js";
 import driverRoutes from "./admin/driverRoutes.js";
 import vehicleRoutes from "./admin/vehicleRoutes.js";
+import adminUserRoutes from "./admin/adminUserRoutes.js";
 
 // ✅ Category Routes
 import categoryAdminRoutes from "./category/categoryAdminRoutes.js";
@@ -89,6 +90,7 @@ router.use("/admin", orderAdminRoutes);
 router.use("/admin", driverRoutes);
 router.use("/admin", adminAuthRoutes);
 router.use("/admin", vehicleRoutes);
+router.use("/admin/users", adminUserRoutes);
 
 // ===============================
 // ✅ User Profile Routes

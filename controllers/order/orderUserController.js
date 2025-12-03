@@ -85,8 +85,7 @@ export const createOrder = async (req, res) => {
       customer_details: {
         customer_id: customer_details.customer_id,
         customer_name: customer_details.customer_name,
-        customer_email:
-          customer_details.customer_email || "mobilechakkidemo@gmail.com",
+        customer_email: "mobilechakkidemo@gmail.com",
         customer_phone: customer_details.customer_phone,
       },
 
@@ -99,20 +98,21 @@ export const createOrder = async (req, res) => {
     console.log("➡ Final Request:", finalRequest);
 
     // USE PG — NOT cashfree.PG
-const cfRes = await PG.orders.create(finalRequest);
+// const cfRes = await PG.order(finalRequest);
+const { data: cfRes } = await PG.PGCreateOrder(finalRequest);
 console.log("PG.orders:", PG.orders);
 
     const order = cfRes.data;
     console.log("✅ Cashfree Order Created:", order);
 
-    await Transaction.create({
-      userId: customer_details.customer_id,
-      orderId: order.order_id,
-      paymentSessionId: order.payment_session_id,
-      amount: order_amount,
-      txStatus: "initiated",
-      txnType: "credited",
-    });
+    // await Transaction.create({
+    //   userId: customer_details.customer_id,
+    //   orderId: order.order_id,
+    //   paymentSessionId: order.payment_session_id,
+    //   amount: order_amount,
+    //   txStatus: "initiated",
+    //   txnType: "credited",
+    // });
 
     return res.json({
       success: true,
