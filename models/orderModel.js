@@ -63,11 +63,19 @@ const orderSchema = new mongoose.Schema(
     totalPrice: { type: Number, required: true, default: 0 },
 
     // Status tracking
-    orderStatus: {
-      type: String,
-      enum: ["Processing", "Shipped", "Delivered", "Cancelled", "Payment Failed"],
-      default: "Processing",
-    },
+  orderStatus: {
+  type: String,
+  enum: [
+    "Processing",
+    "Shipped",
+    "Out for Delivery",
+    "Delivered",
+    "Cancelled",
+    "Payment Failed"
+  ],
+  default: "Processing",
+},
+
     deliveredAt: Date,
     paidAt: Date,
   },
